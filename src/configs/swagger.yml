@@ -1,0 +1,482 @@
+openapi: 3.0.0
+info:
+  title: Backend
+  description: Backend API
+  version: 1.0.0
+servers:
+  - url: https://localhost/
+    description: Local development server
+components:
+  securitySchemas:
+    cookieAuth:
+      type: apiKey
+      in: cookie
+      name: ACCESS_TOKEN
+  schemas:
+    Error:
+      type: object
+      properties:
+        field:
+          type: string
+        message:
+          type: string
+    ErrorResponseBody:
+      type: array
+      items:
+        $ref: "#/components/schemas/Error"
+    UserStatus:
+      type: string
+      enum:
+        - ENABLED
+        - DISABLED
+        - LOCKED
+        - BANNED
+    Permission:
+      type: object
+      properties:
+        name:
+          type: string
+    Roles:
+      type: object
+      properties:
+        name:
+          type: string
+        permissions:
+          type: array
+          items:
+            $ref: "#/components/schemas/Permission"
+    UserForResponse:
+      type: object
+      properties:
+        id:
+          type: string
+        email:
+          type: string
+        status:
+          $ref: "#/components/schemas/UserStatus"
+        roles:
+          type: array
+          items:
+            $ref: "#/components/schemas/Roles"
+        createdAt:
+          type: string
+        updatedAt:
+          type: string
+    ProfileForResponse:
+      type: object
+      properties:
+        id:
+          type: string
+        firstName:
+          type: string
+        lastName:
+          type: string
+        createdAt:
+          type: string
+        updatedAt:
+          type: string
+responses:
+  NotFound:
+    description: Not found
+    content:
+      application/json:
+        schema:
+          $ref: "#/components/schemas/ErrorResponseBody"
+  InternalServerError:
+    description: Internal Server Error
+    content:
+      application/json:
+        schema:
+          $ref: "#/components/schemas/ErrorResponseBody"
+  ValidationError:
+    description: Validation error
+    content:
+      application/json:
+        schema:
+          $ref: "#/components/schemas/ErrorResponseBody"
+  AuthenticationError:
+    description: Authentication error
+    content:
+      application/json:
+        schema:
+          $ref: "#/components/schemas/ErrorResponseBody"
+security:
+  - cookieAuth: []
+tags:
+  - Root
+  - User
+  - Profile
+paths:
+  /healthcheck:
+    get:
+      summary: Check if API server is running correctly
+      tags:
+        - Root
+      security: []
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                example:
+                  message: "API running"
+        "500":
+          $ref: "#/responses/InternalServerError"
+  /csrftoken:
+    get:
+      summary: Get CSRF Token
+      tags:
+        - Root
+      security: []
+      responses:
+        "204":
+          description: OK
+  /signup:
+    post:
+      summary: Sign Up
+      tags:
+        - User
+      security: []
+      parameters:
+        - in: header
+          name: x-csrf-token
+          schema:
+            type: string
+          required: true
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                password:
+                  type: string
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserForResponse"
+        "400":
+          $ref: "#/responses/ValidationError"
+        "500":
+          $ref: "#/responses/InternalServerError"
+  /login:
+    post:
+      summary: Login
+      tags:
+        - User
+      security: []
+      parameters:
+        - in: header
+          name: x-csrf-token
+          schema:
+            type: string
+          required: true
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                password:
+                  type: string
+      responses:
+        "200":
+          description: Successful
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserForResponse"
+        "400":
+          $ref: "#/responses/ValidationError"
+        "500":
+          $ref: "#/responses/InternalServerError"
+  /logout:
+    post:
+      summary: Logout on single device
+      tags:
+        - User
+      parameters:
+        - in: header
+          name: x-csrf-token
+          schema:
+            type: string
+          required: true
+      responses:
+        "204":
+          description: Successful
+        "401":
+          $ref: "#/responses/AuthenticationError"
+        "500":
+          $ref: "#/responses/InternalServerError"
+  /logoutall:
+    post:
+      summary: Logout all devices
+      tags:
+        - User
+      parameters:
+        - in: header
+          name: x-csrf-token
+          schema:
+            type: string
+          required: true
+      responses:
+        "204":
+          description: Successful
+        "401":
+          $ref: "#/responses/AuthenticationError"
+        "500":
+          $ref: "#/responses/InternalServerError"
+  /forgotpassword:
+    post:
+      summary: Forgot password
+      tags:
+        - User
+      security: []
+      parameters:
+        - in: header
+          name: x-csrf-token
+          schema:
+            type: string
+          required: true
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+      responses:
+        "204":
+          description: Successful
+        "400":
+          $ref: "#/responses/ValidationError"
+        "500":
+          $ref: "#/responses/InternalServerError"
+  /passwordreset:
+    post:
+      summary: Password reset
+      tags:
+        - User
+      security: []
+      parameters:
+        - in: header
+          name: x-csrf-token
+          schema:
+            type: string
+          required: true
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                password:
+                  type: string
+                token:
+                  type: string
+      responses:
+        "204":
+          description: Successful
+        "400":
+          $ref: "#/responses/ValidationError"
+        "500":
+          $ref: "#/responses/InternalServerError"
+  /me:
+    get:
+      summary: Get logged in user
+      tags:
+        - User
+      responses:
+        "200":
+          description: Successful
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserForResponse"
+        "401":
+          $ref: "#/responses/AuthenticationError"
+        "500":
+          $ref: "#/responses/InternalServerError"
+    patch:
+      summary: Update logged in user
+      tags:
+        - User
+      parameters:
+        - in: header
+          name: x-csrf-token
+          schema:
+            type: string
+          required: true
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                password:
+                  type: string
+      responses:
+        "200":
+          description: Successful
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserForResponse"
+        "400":
+          $ref: "#/responses/ValidationError"
+        "401":
+          $ref: "#/responses/AuthenticationError"
+        "500":
+          $ref: "#/responses/InternalServerError"
+    delete:
+      summary: Delete logged in user
+      tags:
+        - User
+      parameters:
+        - in: header
+          name: x-csrf-token
+          schema:
+            type: string
+          required: true
+      responses:
+        "204":
+          description: Successful
+        "401":
+          $ref: "#/responses/AuthenticationError"
+        "500":
+          $ref: "#/responses/InternalServerError"
+  /profile:
+    get:
+      summary: Get logged in user profile
+      tags:
+        - Profile
+      responses:
+        "200":
+          description: Successful
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProfileForResponse"
+        "401":
+          $ref: "#/responses/AuthenticationError"
+        "500":
+          $ref: "#/responses/InternalServerError"
+    patch:
+      summary: Update logged in user profile
+      tags:
+        - Profile
+      parameters:
+        - in: header
+          name: x-csrf-token
+          schema:
+            type: string
+          required: true
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                firstName:
+                  type: string
+                lastName:
+                  type: string
+      responses:
+        "200":
+          description: Successful
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProfileForResponse"
+        "400":
+          $ref: "#/responses/ValidationError"
+        "401":
+          $ref: "#/responses/AuthenticationError"
+        "500":
+          $ref: "#/responses/InternalServerError"
+  /profile/avatar:
+    post:
+      summary: Add avatar to logged in user
+      tags:
+        - Profile
+      parameters:
+        - in: header
+          name: x-csrf-token
+          schema:
+            type: string
+          required: true
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                avatar:
+                  type: string
+                  format: binary
+              required:
+                - avatar
+      responses:
+        "201":
+          description: Successful
+          content:
+            application/json:
+              schema:
+                type: string
+        "400":
+          $ref: "#/responses/ValidationError"
+        "401":
+          $ref: "#/responses/AuthenticationError"
+        "500":
+          $ref: "#/responses/InternalServerError"
+    get:
+      summary: Get avatar for logged in user
+      tags:
+        - Profile
+      responses:
+        "200":
+          description: Successful
+          content:
+            application/json:
+              schema:
+                type: string
+        "401":
+          $ref: "#/responses/AuthenticationError"
+        "500":
+          $ref: "#/responses/InternalServerError"
+    delete:
+      summary: Delete avatar for logged in user
+      tags:
+        - Profile
+      parameters:
+        - in: header
+          name: x-csrf-token
+          schema:
+            type: string
+          required: true
+      responses:
+        "204":
+          description: Successful
+        "401":
+          $ref: "#/responses/AuthenticationError"
+        "500":
+          $ref: "#/responses/InternalServerError"

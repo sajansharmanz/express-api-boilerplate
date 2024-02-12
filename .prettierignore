@@ -1,0 +1,14 @@
+# dependencies
+node_modules
+
+# testing
+coverage
+
+# logs
+logs
+
+# misc
+.env
+.env.example
+
+src/emails/exports/*

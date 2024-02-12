@@ -1,0 +1,7 @@
+{
+  "restartable": "rs",
+  "verbose": true,
+  "ignore": [],
+  "watch": ["src/*"],
+  "ext": "js,ts,json,yml,yaml,tsx"
+}
