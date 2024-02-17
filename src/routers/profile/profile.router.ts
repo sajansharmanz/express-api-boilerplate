@@ -1,7 +1,7 @@
 import { Router } from "express";
 import multer, { Multer } from "multer";
 
-import { ApiRouter } from "../../types/api/api.types";
+import { ApiRouter } from "../../types";
 
 import checkAuth from "../../middlewares/token";
 import canAccess from "../../middlewares/permission";

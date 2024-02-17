@@ -1,4 +1,6 @@
 const ROUTE_NAMES = {
+  HEALTHCHECK: "/healthcheck",
+  CSRF_TOKEN: "/csrftoken",
   SWAGGER: "/swagger",
   SIGN_UP: "/signup",
   LOGIN: "/login",
@@ -14,6 +16,10 @@ const ROUTE_NAMES = {
   CREATE_AVATAR: "/profile/avatar",
   GET_AVATAR: "/profile/avatar",
   DELETE_AVATAR: "/profile/avatar",
+  OTP_GENERATE: "/otp/generate",
+  OTP_VERIFY: "/otp/verify",
+  OTP_VALIDATE: "/otp/validate",
+  OTP_DISABLE: "/otp/disable",
 } as const;
 
 export default ROUTE_NAMES;

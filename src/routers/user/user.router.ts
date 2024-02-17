@@ -1,6 +1,6 @@
 import { Router } from "express";
 
-import { ApiRouter } from "../../types/api/api.types";
+import { ApiRouter } from "../../types";
 
 import ROUTE_NAMES from "../../constants/routeNames";
 import PERMISSIONS from "../../constants/permissions";

@@ -5,7 +5,7 @@ import { PrismaClient, TokenType } from "@prisma/client";
 import { signToken } from "../../utils/tokens";
 import { hashString } from "../../utils/crypto";
 
-import { UserForResponse } from "../../types/user/user.types";
+import { UserForResponse } from "../../types";
 
 export const ACCESS_TOKEN_COOKIE_NAME = "accessToken";
 export const REFRESH_TOKEN_COOKIE_NAME = "refreshToken";

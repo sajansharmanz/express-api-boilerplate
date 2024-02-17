@@ -33,6 +33,10 @@ model User {
   profile             Profile?
   roles               Role[]
   tokens              Token[]
+  otpEnabled          Boolean    @default(false)
+  otpVerified         Boolean    @default(false)
+  otpSecret           String?
+  otpAuthURL          String?
   createdAt           DateTime   @default(now())
   updatedAt           DateTime   @updatedAt
 }

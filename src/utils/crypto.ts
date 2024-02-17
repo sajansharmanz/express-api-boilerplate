@@ -1,3 +1,5 @@
+import { encode } from "hi-base32";
+
 // Configs
 import Logger from "../configs/logger";
 
@@ -16,4 +18,10 @@ export const hashString = async (value: string): Promise<string> => {
     Logger.error(error);
     throw new InternalServerError(ERROR_MESSAGES.utils.hashingString);
   }
+};
+
+export const generateRandomBase32 = async (): Promise<string> => {
+  const crypto = await import("node:crypto");
+
+  return encode(crypto.randomBytes(15)).replace(/=/g, "").substring(0, 24);
 };

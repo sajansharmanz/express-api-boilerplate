@@ -54,6 +54,8 @@ components:
           type: string
         status:
           $ref: "#/components/schemas/UserStatus"
+        otpEnabled:
+          type: boolean
         roles:
           type: array
           items:
@@ -62,6 +64,13 @@ components:
           type: string
         updatedAt:
           type: string
+    UserOTPEnabledLoginResponse:
+      type: object
+      properties:
+        id:
+          type: string
+        otpEnabled:
+          type: boolean
     ProfileForResponse:
       type: object
       properties:
@@ -106,6 +115,7 @@ tags:
   - Root
   - User
   - Profile
+  - OTP
 paths:
   /healthcheck:
     get:
@@ -199,7 +209,9 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/UserForResponse"
+                oneOf:
+                  - $ref: "#/components/schemas/UserForResponse"
+                  - $ref: "#/components/schemas/UserOTPEnabledLoginResponse"
         "400":
           $ref: "#/responses/ValidationError"
         "500":
@@ -478,5 +490,114 @@ paths:
           description: Successful
         "401":
           $ref: "#/responses/AuthenticationError"
+        "500":
+          $ref: "#/responses/InternalServerError"
+  /otp/generate:
+    post:
+      summary: Generate OTP code
+      description: Used to create a secret and url that will be used to create a QR code for an authenticator app
+      tags:
+        - OTP
+      parameters:
+        - in: header
+          name: x-csrf-token
+          schema:
+            type: string
+          required: true
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  secret:
+                    type: string
+                  url:
+                    type: string
+        "401":
+          $ref: "#/responses/AuthenticationError"
+        "500":
+          $ref: "#/responses/InternalServerError"
+  /otp/verify:
+    post:
+      summary: Verify OTP
+      description: Used to verify authenticator token on initial setup
+      tags:
+        - OTP
+      parameters:
+        - in: header
+          name: x-csrf-token
+          schema:
+            type: string
+          required: true
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                token:
+                  type: string
+      responses:
+        "204":
+          description: Successful
+        "401":
+          $ref: "#/responses/AuthenticationError"
+        "500":
+          $ref: "#/responses/InternalServerError"
+  /otp/validate:
+    post:
+      summary: Validate OTP
+      description: Used to validate OTP token on subsequent logins
+      tags:
+        - OTP
+      parameters:
+        - in: header
+          name: x-csrf-token
+          schema:
+            type: string
+          required: true
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: string
+                token:
+                  type: string
+      responses:
+        "200":
+          description: Successful
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserForResponse"
+        "400":
+          $ref: "#/responses/ValidationError"
+        "401":
+          $ref: "#/responses/AuthenticationError"
+        "500":
+          $ref: "#/responses/InternalServerError"
+  /otp/disable:
+    post:
+      summary: Disable OTP
+      description: Used to remove OTP functionality from account
+      tags:
+        - OTP
+      parameters:
+        - in: header
+          name: x-csrf-token
+          schema:
+            type: string
+          required: true
+      responses:
+        "204":
+          description: Successful
+        "400":
+          $ref: "#/responses/ValidationError"
         "500":
           $ref: "#/responses/InternalServerError"

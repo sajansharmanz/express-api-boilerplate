@@ -11,7 +11,8 @@ import {
   UserForResponse,
   UserLoginRequest,
   UserSignUpRequest,
-} from "../../types/user/user.types";
+  UserOTPEnabledLoginResponse,
+} from "../../types";
 
 import {
   AuthenticationError,
@@ -63,7 +64,7 @@ export class UserController {
 
   login = async (
     req: Request<never, never, UserLoginRequest, never>,
-    res: Response<UserForResponse>,
+    res: Response<UserForResponse | UserOTPEnabledLoginResponse>,
     next: NextFunction,
   ) => {
     try {
@@ -79,12 +80,17 @@ export class UserController {
         return next(new AuthenticationError());
       }
 
+      if (user.otpEnabled) {
+        return res.status(200).send({ id: user.id, otpEnabled: true });
+      }
+
       if (!(await verifyPassowrd(password, user.password))) {
         const failedLoginAttempts = user.failedLoginAttempts + 1;
         let newStatus: UserStatus = user.status;
 
         if (failedLoginAttempts >= MAX_FAILED_LOGIN_ATTEMPTS) {
           newStatus = UserStatus.LOCKED;
+          await this.emailService.accountLocked(user.email);
         }
 
         await this.userService.loginAttemptUpdates(
@@ -92,8 +98,6 @@ export class UserController {
           failedLoginAttempts,
           newStatus,
         );
-
-        await this.emailService.accountLocked(user.email);
 
         return next(new AuthenticationError());
       }

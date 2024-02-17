@@ -2,7 +2,7 @@
 import { Request, Response, NextFunction } from "express";
 import { z, ZodError } from "zod";
 
-import { IValidationError } from "../types/errors/errors.types";
+import { IValidationError } from "../types";
 
 import { InternalServerError, ValidationError } from "../errors";
 import ERROR_MESSAGES from "../constants/errorMessages";
