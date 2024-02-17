@@ -21,6 +21,8 @@ import {
 export class OTPController {
   private otpIssuer = OTP_ISSUER;
   private otpLabel = OTP_LABEL;
+  private algorithm = "SHA256";
+  private digits = 6;
   private userService: UserService;
   private emailService: EmailService;
   private tokenService: TokenService;
@@ -42,8 +44,8 @@ export class OTPController {
       const totp = new TOTP({
         issuer: this.otpIssuer,
         label: this.otpLabel,
-        algorithm: "SHA1",
-        digits: 6,
+        algorithm: this.algorithm,
+        digits: this.digits,
         secret,
       });
 
@@ -76,8 +78,8 @@ export class OTPController {
       const totp = new TOTP({
         issuer: this.otpIssuer,
         label: this.otpLabel,
-        algorithm: "SHA1",
-        digits: 6,
+        algorithm: this.algorithm,
+        digits: this.digits,
         secret: user.otpSecret!,
       });
 
@@ -110,8 +112,8 @@ export class OTPController {
       const totp = new TOTP({
         issuer: this.otpIssuer,
         label: this.otpLabel,
-        algorithm: "SHA1",
-        digits: 6,
+        algorithm: this.algorithm,
+        digits: this.digits,
         secret: user.otpSecret!,
       });
 
