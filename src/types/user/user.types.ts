@@ -13,7 +13,12 @@ export type UpdateUserRequest = z.infer<typeof userSchemas.updateMe>;
 
 export type UserForResponse = Omit<
   User,
-  "password" | "passwordResetToken" | "failedLoginAttempts"
+  | "password"
+  | "passwordResetToken"
+  | "failedLoginAttempts"
+  | "otpVerified"
+  | "otpSecret"
+  | "otpAuthURL"
 > & {
   roles: {
     name: string;
@@ -22,3 +27,5 @@ export type UserForResponse = Omit<
     }[];
   }[];
 };
+
+export type UserOTPEnabledLoginResponse = Pick<User, "id" | "otpEnabled">;

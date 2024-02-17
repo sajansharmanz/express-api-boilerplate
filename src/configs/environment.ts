@@ -19,4 +19,6 @@ export const {
   NODEMAILER_SECURE,
   NODEMAILER_USERNAME,
   NODEMAILER_PASSWORD,
+  OTP_ISSUER,
+  OTP_LABEL,
 } = process.env;

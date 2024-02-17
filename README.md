@@ -93,6 +93,14 @@ Whether the mail server uses HTTPS or not
 
 Username and password for mail server
 
+**OTP_ISSUER (string)**
+
+The issuer used for Authenticator apps (eg. company name)
+
+**OTP_LABEL (string)**
+
+The label used for Authenticator apps (eg. app name )
+
 **HUSKY (do not change)**
 
 This variable is used for CI/CD pipelines to disable husky.

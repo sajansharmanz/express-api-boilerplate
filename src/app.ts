@@ -24,7 +24,7 @@ import Logger from "./configs/logger";
 
 import { ApiRouter } from "./types";
 
-import { ProfileRouter, RootRouter, UserRouter } from "./routers";
+import { OTPRouter, ProfileRouter, RootRouter, UserRouter } from "./routers";
 
 export type ApiServer = Server<typeof IncomingMessage, typeof ServerResponse>;
 
@@ -67,6 +67,7 @@ export default class Api {
      */
     const routes: Array<ApiRouter> = [
       new UserRouter(),
+      new OTPRouter(),
       new ProfileRouter(),
       new RootRouter(),
     ];

@@ -11,6 +11,10 @@ CREATE TABLE "User" (
     "password" TEXT NOT NULL,
     "failedLoginAttempts" INTEGER NOT NULL DEFAULT 0,
     "status" "UserStatus" NOT NULL DEFAULT 'ENABLED',
+    "otpEnabled" BOOLEAN NOT NULL DEFAULT false,
+    "otpVerified" BOOLEAN NOT NULL DEFAULT false,
+    "otpSecret" TEXT,
+    "otpAuthURL" TEXT,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 

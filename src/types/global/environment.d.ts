@@ -26,6 +26,8 @@ declare global {
       NODEMAILER_SECURE: boolean;
       NODEMAILER_USERNAME: string;
       NODEMAILER_PASSWORD: string;
+      OTP_ISSUER: string;
+      OTP_LABEL: string;
     }
   }
 }

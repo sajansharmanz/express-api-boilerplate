@@ -33,6 +33,9 @@ const ERROR_MESSAGES = {
       invalid: "Invalid token",
       expired: "Expired token",
     },
+    otp: {
+      error: "Error verifying OTP",
+    },
   },
   user: {
     notFound: "User not found",

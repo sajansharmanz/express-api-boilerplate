@@ -10,6 +10,7 @@ const USER_FOR_RESPONSE = {
   id: true,
   email: true,
   status: true,
+  otpEnabled: true,
   createdAt: true,
   updatedAt: true,
   roles: {
@@ -102,6 +103,14 @@ export class UserService {
     });
   };
 
+  findFullById = async (userId: string): Promise<User | null> => {
+    return await this.prisma.user.findUnique({
+      where: {
+        id: userId,
+      },
+    });
+  };
+
   updateEmailAndPassword = async (
     userId: string,
     email: string | undefined,
@@ -138,6 +147,44 @@ export class UserService {
     await this.prisma.user.delete({
       where: {
         id: userId,
+      },
+    });
+  };
+
+  addOTPSecretAndUrl = async (userId: string, secret: string, url: string) => {
+    await this.prisma.user.update({
+      where: {
+        id: userId,
+      },
+      data: {
+        otpSecret: secret,
+        otpAuthURL: url,
+      },
+    });
+  };
+
+  setOTPVerified = async (userId: string) => {
+    await this.prisma.user.update({
+      where: {
+        id: userId,
+      },
+      data: {
+        otpEnabled: true,
+        otpVerified: true,
+      },
+    });
+  };
+
+  disableOTP = async (userId: string) => {
+    await this.prisma.user.update({
+      where: {
+        id: userId,
+      },
+      data: {
+        otpEnabled: false,
+        otpVerified: false,
+        otpSecret: null,
+        otpAuthURL: null,
       },
     });
   };
