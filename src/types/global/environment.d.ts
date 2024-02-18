@@ -13,6 +13,7 @@ declare global {
         | "debug"
         | "silly";
       DATABASE_URL: string;
+      ENCRYPTION_SECRET: string;
       JWT_SECRET: string;
       REFRESH_TOKEN_SECRET: string;
       PASSWORD_RESET_TOKEN_SECRET: string;

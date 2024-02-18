@@ -5,6 +5,7 @@ import { hashPassword } from "../../utils/password";
 import { UserForResponse } from "../../types";
 
 import { DEFAULT_USER_ROLE_NAME } from "../../constants/roles";
+import { encrypt } from "../../utils/crypto";
 
 const USER_FOR_RESPONSE = {
   id: true,
@@ -151,14 +152,17 @@ export class UserService {
     });
   };
 
-  addOTPSecretAndUrl = async (userId: string, secret: string, url: string) => {
+  setOTPSecret = async (userId: string, secret: string) => {
+    const { content, iv, authTag } = await encrypt(secret);
+
     await this.prisma.user.update({
       where: {
         id: userId,
       },
       data: {
-        otpSecret: secret,
-        otpAuthURL: url,
+        otpSecret: content,
+        otpSecretIV: iv,
+        otpAuthTag: authTag,
       },
     });
   };
@@ -184,7 +188,7 @@ export class UserService {
         otpEnabled: false,
         otpVerified: false,
         otpSecret: null,
-        otpAuthURL: null,
+        otpSecretIV: null,
       },
     });
   };

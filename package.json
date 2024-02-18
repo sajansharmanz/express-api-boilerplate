@@ -1,7 +1,7 @@
 {
-  "name": "gym-app-backend",
+  "name": "express-api-boilerplate",
   "version": "1.0.0",
-  "description": "Sajento Gym App Backend",
+  "description": "Express API boilerplate",
   "main": "index.js",
   "scripts": {
     "prepare": "husky",
@@ -24,10 +24,10 @@
     "email:export": "email export --outDir src/emails/exports --dir ./src/emails/templates/"
   },
   "keywords": [
-    "gym",
-    "fitness",
-    "gym app",
-    "fitness app"
+    "express",
+    "api",
+    "rest",
+    "boilerplate"
   ],
   "author": "Sajan Sharma - sajansharmanz@gmail.com",
   "license": "ISC",
