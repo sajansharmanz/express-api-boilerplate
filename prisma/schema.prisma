@@ -36,7 +36,8 @@ model User {
   otpEnabled          Boolean    @default(false)
   otpVerified         Boolean    @default(false)
   otpSecret           String?
-  otpAuthURL          String?
+  otpSecretIV         String?
+  otpAuthTag          String?
   createdAt           DateTime   @default(now())
   updatedAt           DateTime   @updatedAt
 }

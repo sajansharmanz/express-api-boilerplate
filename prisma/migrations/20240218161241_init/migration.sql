@@ -14,7 +14,8 @@ CREATE TABLE "User" (
     "otpEnabled" BOOLEAN NOT NULL DEFAULT false,
     "otpVerified" BOOLEAN NOT NULL DEFAULT false,
     "otpSecret" TEXT,
-    "otpAuthURL" TEXT,
+    "otpSecretIV" TEXT,
+    "otpAuthTag" TEXT,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 

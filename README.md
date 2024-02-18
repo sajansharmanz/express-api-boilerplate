@@ -28,7 +28,7 @@ Create the following files at the project root
 
 - .env
 
-**_ORIGIN_URLS (comma separated string)_**
+**ORIGIN_URLS (comma separated string)**
 As part of the CSRF protection strategy, we need to set the URL we expect
 
 Example:
@@ -37,7 +37,7 @@ Example:
 https://localhost, https://yourdomain.com
 ```
 
-**_LOG_LEVEL (string)_**
+**LOG_LEVEL (string)**
 
 We use [wintson](https://www.npmjs.com/package/winston) logger, so the available options are
 
@@ -49,7 +49,7 @@ We use [wintson](https://www.npmjs.com/package/winston) logger, so the available
 - debug
 - silly
 
-**_JWT_SECRET / REFRESH_TOKEN_SECRET / PASSWORD_RESET_TOKEN_SECRET / CSRF_TOKEN_SECRET / COOKIE_SECRET (string)_**
+**ENCRYPTION_SECRET / JWT_SECRET / REFRESH_TOKEN_SECRET / PASSWORD_RESET_TOKEN_SECRET / CSRF_TOKEN_SECRET / COOKIE_SECRET (string)**
 
 Create a random string using [https://nodejs.org/api/crypto.html#cryptorandombytessize-callback](https://nodejs.org/api/crypto.html#cryptorandombytessize-callback) for each variable.
 

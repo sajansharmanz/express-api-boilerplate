@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from "express";
 import { TOTP } from "otpauth";
 import { UserStatus } from "@prisma/client";
 
-import { generateRandomBase32 } from "../../utils/crypto";
+import { decrypt, generateRandomBase32 } from "../../utils/crypto";
 
 import { EmailService, TokenService, UserService } from "../../service";
 
@@ -51,7 +51,7 @@ export class OTPController {
 
       const url = totp.toString();
 
-      await this.userService.addOTPSecretAndUrl(req.user!.id, secret, url);
+      await this.userService.setOTPSecret(req.user!.id, secret);
 
       return res.status(201).send({
         secret,
@@ -71,16 +71,25 @@ export class OTPController {
         { message: ERROR_MESSAGES.validators.otp.error },
       ]);
 
-      if (!user || (user && !user.otpSecret)) {
+      if (
+        !user ||
+        (user && (!user.otpSecret || !user.otpSecretIV || !user.otpAuthTag))
+      ) {
         return next(err);
       }
+
+      const secret = await decrypt(
+        user.otpSecret!,
+        user.otpSecretIV!,
+        user.otpAuthTag!,
+      );
 
       const totp = new TOTP({
         issuer: this.otpIssuer,
         label: this.otpLabel,
         algorithm: this.algorithm,
         digits: this.digits,
-        secret: user.otpSecret!,
+        secret,
       });
 
       const delta = totp.validate({ token });
@@ -105,16 +114,25 @@ export class OTPController {
 
       const err = new AuthenticationError();
 
-      if (!user || (user && !user.otpSecret)) {
+      if (
+        !user ||
+        (user && (!user.otpSecret || !user.otpSecretIV || !user.otpAuthTag))
+      ) {
         return next(err);
       }
+
+      const secret = await decrypt(
+        user.otpSecret!,
+        user.otpSecretIV!,
+        user.otpAuthTag!,
+      );
 
       const totp = new TOTP({
         issuer: this.otpIssuer,
         label: this.otpLabel,
         algorithm: this.algorithm,
         digits: this.digits,
-        secret: user.otpSecret!,
+        secret,
       });
 
       const delta = totp.validate({ token, window: 1 });

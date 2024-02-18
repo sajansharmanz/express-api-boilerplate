@@ -18,7 +18,8 @@ export type UserForResponse = Omit<
   | "failedLoginAttempts"
   | "otpVerified"
   | "otpSecret"
-  | "otpAuthURL"
+  | "otpSecretIV"
+  | "otpAuthTag"
 > & {
   roles: {
     name: string;
