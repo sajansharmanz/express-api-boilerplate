@@ -1,0 +1,26 @@
+name: Pull Request Validator
+on:
+  push:
+  pull_request:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Setup Node Environment
+        uses: actions/setup-node@v3
+        with:
+          node-version: latest
+          cache: "npm"
+      - name: Install Dependencies
+        run: npm clean-install
+      - name: Check Type Errors
+        run: npm run typecheck
+      - name: Check ESLint Errors
+        run: npm run eslint
+      - name: Check Prettier
+        run: npm run prettier:check
+      - name: Run Unit Tests
+        run: npm run test
