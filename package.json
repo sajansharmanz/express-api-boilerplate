@@ -63,7 +63,7 @@
     "typescript": "^5.3.3"
   },
   "dependencies": {
-    "@prisma/client": "^5.9.1",
+    "@prisma/client": "^5.10.1",
     "@react-email/components": "^0.0.14",
     "bcryptjs": "^2.4.3",
     "compression": "^1.7.4",
