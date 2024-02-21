@@ -3,6 +3,10 @@ import { ORIGIN_URLS } from "../configs/environment";
 import { ForbiddenError } from "../errors";
 
 const checkOrigin = (req: Request, _res: Response, next: NextFunction) => {
+  if (req.method === "GET") {
+    return next();
+  }
+
   const origin = req.headers.origin || req.headers.referer;
   const allowedOrigins = ORIGIN_URLS.split(",").map((origin) => origin.trim());
 

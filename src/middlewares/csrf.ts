@@ -14,6 +14,10 @@ const validateCSRF = async (
   next: NextFunction,
 ) => {
   try {
+    if (req.method === "GET") {
+      return next();
+    }
+
     const { csrfToken } = req.signedCookies;
     const headerToken = req.get(CSRF_TOKEN_HEADER_NAME);
 

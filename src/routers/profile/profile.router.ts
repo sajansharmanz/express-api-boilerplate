@@ -8,8 +8,6 @@ import canAccess from "../../middlewares/permission";
 import schemaValidator, {
   VALIDATION_AREA,
 } from "../../middlewares/schemaValidator";
-import checkOrigin from "../../middlewares/checkOrigin";
-import validateCSRF from "../../middlewares/csrf";
 
 import ROUTE_NAMES from "../../constants/routeNames";
 import PERMISSIONS from "../../constants/permissions";
@@ -43,8 +41,6 @@ export class ProfileRouter implements ApiRouter {
 
     this.router.patch(
       ROUTE_NAMES.PATCH_PROFILE,
-      checkOrigin,
-      validateCSRF,
       checkAuth,
       canAccess(PERMISSIONS.UPDATE_PROFILE),
       schemaValidator(this.profileSchemas.update),
@@ -53,8 +49,6 @@ export class ProfileRouter implements ApiRouter {
 
     this.router.post(
       ROUTE_NAMES.CREATE_AVATAR,
-      checkOrigin,
-      validateCSRF,
       checkAuth,
       canAccess(PERMISSIONS.CREATE_FILE, PERMISSIONS.UPDATE_PROFILE),
       this.upload.single(this.avatarUploadFieldName),
@@ -75,8 +69,6 @@ export class ProfileRouter implements ApiRouter {
 
     this.router.delete(
       ROUTE_NAMES.DELETE_AVATAR,
-      checkOrigin,
-      validateCSRF,
       checkAuth,
       canAccess(PERMISSIONS.DELETE_FILE, PERMISSIONS.DELETE_PROFILE),
       this.profileController.deleteAvatar,
