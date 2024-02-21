@@ -19,7 +19,7 @@ const rateLimit = !isProduction()
           case ROUTE_NAMES.PASSWORD_RESET:
             return 5;
           default:
-            return 100;
+            return 50;
         }
       },
     });

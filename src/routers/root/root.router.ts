@@ -1,6 +1,9 @@
 import { Router } from "express";
+
 import { ApiRouter } from "../../types";
+
 import { RootController } from "../../controller";
+
 import ROUTE_NAMES from "../../constants/routeNames";
 
 export class RootRouter implements ApiRouter {

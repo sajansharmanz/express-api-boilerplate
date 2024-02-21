@@ -17,6 +17,8 @@ import rateLimit from "./middlewares/rateLimit";
 import httpLogger from "./middlewares/httpLogger";
 import setCache from "./middlewares/cache";
 import errorMiddleware from "./middlewares/error";
+import checkOrigin from "./middlewares/checkOrigin";
+import validateCSRF from "./middlewares/csrf";
 
 import { isDevelopment } from "./utils/environment";
 
@@ -45,13 +47,15 @@ export default class Api {
   private setupApp = (app: Express) => {
     app.use(cors);
 
-    app.use(rateLimit);
-    app.use(httpLogger);
-
     app.use(json());
     app.use(compression());
     app.use(helmet());
     app.use(cookieParser(COOKIE_SECRET));
+
+    app.use(rateLimit);
+    app.use(httpLogger);
+    app.use(checkOrigin);
+    app.use(validateCSRF);
 
     app.use(setCache);
 
